@@ -108,7 +108,7 @@ if fig_id == 9 && length(sel_phase)>1
     plot(aw1,aa,'-r', aw2,aa,'-r')
     
 elseif fig_id == 9
-    sel_phase=datetime(datestr(sel_phase));
+    sel_phase=datetime(datestr(sel_phase), 'Locale', 'en_US');
     aw1(1) = sel_phase - seconds(5);
     aw1(2) = sel_phase - seconds(5);
     aw2(1) = sel_phase + seconds(25);
