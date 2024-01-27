@@ -43,9 +43,23 @@ for i = 1:length(selected_stations)
     end
     
     % get channel information
-    [chan_info] = get_channel_info(strcat(sel_data.work_dir, ...
+    
+    channel_info_file = strcat(sel_data.work_dir, ...
         '/mseed_files/', char(selected_stations(i)),'_',...
-        char(stations.nc(st_ind)), '/channel_info.txt'),selected_stations(i));
+        char(stations.nc(st_ind)), '/channel_info.txt');
+    % to check if it is mseed
+    if ~exist(channel_info_file, 'file') == 2
+        channel_info_file = strcat(sel_data.work_dir, ...
+            '/sac_files/', char(selected_stations(i)),'_',...
+            char(stations.nc(st_ind)), '/channel_info.txt');
+        if ~exist(channel_info_file, 'file') == 2
+            disp('could not find the channel info file!')
+        end
+    end
+    
+    
+    [chan_info] = get_channel_info(channel_info_file,selected_stations(i));
+  
     
     %read log file containing successfully downloaded data
     fileID2 = fopen([sel_data.work_dir,'/data_request_',...
@@ -96,7 +110,20 @@ for i = 1:length(selected_stations)
         % read miniseed
         disp(char(files(n)));
         file_read = strcat(char(sel_data.work_dir),'/',char(files(n)));
-        file_mseed = extract_adv(file_read,chan_info(choi));
+        % check the file type according to the prefix
+        tmp = strsplit(char(files(n)), '/');
+
+        if strcmpi(tmp(1), 'mseed_files') || strcmpi(tmp(2), 'mseed_files')
+            file_mseed = extract_adv(file_read,chan_info(choi));
+        else
+            if strcmpi(tmp(1), 'sac_files') || strcmpi(tmp(2), 'sac_files')
+                file_mseed = extract_adv_sac(file_read,chan_info(choi));
+            else
+                disp('bad data file type, those files should be placed at /mseed_files or /sac_files')
+            end
+        end        
+        
+       % file_mseed = extract_adv(file_read,chan_info(choi));
         
         % check if more than 2 components exist
         if length(file_mseed(1,:))>2
@@ -104,7 +131,7 @@ for i = 1:length(selected_stations)
         if ~isempty(file_mseed(1).comp) && ~isempty(file_mseed(2).comp) && ...
                 ~isempty(file_mseed(3).comp) 
             % check if components consist of more than 30 minutes
-            no_samples = 1800 / file_mseed(1).dt;
+            no_samples = 100 / file_mseed(1).dt;
             
             if sum(size(file_mseed(1).amp))>no_samples && ...
                     sum(size(file_mseed(2).amp))>no_samples && ...

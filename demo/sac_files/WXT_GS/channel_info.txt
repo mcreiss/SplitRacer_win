@@ -1,0 +1,4 @@
+Network | Station | Location | Channel | Latitude | Longitude | Elevation | Depth | Azimuth | Dip | SensorDescription | Scale | ScaleFreq | ScaleUnits | SampleRate | Starttime | EndTime
+GS | WXT | - | BHE | 32.952 | 194.681|  0 | 0 |  90 | 0 | NoDescrip | 1| 1 |Count | 20 | 1979-01-01T00:00:00 | 2099-01-01T00:00:00 
+GS | WXT | - | BHN | 32.952 | 194.681 | 0 | 0 | 0 | 0 | NoDescrip  | 1 |1 | Count | 20 | 1979-01-01T00:00:00 | 2099-01-01T00:00:00 
+GS | WXT | - | BHZ  |32.952 | 194.681 | 0 | 0 | 0 | -90 | NoDescrip | 1 | 1 | Count| 20 | 1979-01-01T00:00:00 | 2099-01-01T00:00:00 

@@ -94,7 +94,19 @@ files = C2{1,14};
 
 sel_event1 = files(test_data.plot_vals-1,:);
 sel_event = strcat(char(test_data.work_dir),'/',char(sel_event1));
-file_mseed = extract(char(sel_event));
+% check the file type according to the path
+tmp = strsplit(sel_event1{1}, '/');
+
+if strcmpi(tmp(1), 'mseed_files') || strcmpi(tmp(2), 'mseed_files')
+    file_mseed = extract(char(sel_event));
+else
+    if strcmpi(tmp(1), 'sac_files') || strcmpi(tmp(2), 'sac_files')
+        file_mseed = extract_sac(char(sel_event));
+    else
+        disp('bad data file type, those files should be placed at /mseed_files or /sac_files')
+    end
+end
+
 
 % check if more than 2 components exist
 if length(file_mseed)<3
